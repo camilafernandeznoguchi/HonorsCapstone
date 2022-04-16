@@ -16,5 +16,3 @@ def authenticateUser():
         authenticated = True
         GPIO.cleanup()
     return authenticated
-
-print(authenticateUser())

@@ -1,23 +1,11 @@
 #! /usr/bin/python2
 import time
 import sys
-#import RPi.GPIO as GPIO #RFID
-from mfrc522 import SimpleMFRC522 #RFID
 
 sys.path.insert(0, '/home/camilaferno/Desktop/HonorsCapstone/hd44780')
 import lcddriver
 
-def authenticateUser():
-    print("Welcome. Please scan your ID")
-    id, text = reader.read()
-    if id == user1["UID"]:
-        print("Welcome", user1["firstName"])
-    return True
-    
-
-user1 = {'UID': 188435878401, "firstName": "John", 'lastName': "Doe"}
-
-reader = SimpleMFRC522() #RFID
+import RFIDread
 
 EMULATE_HX711=False #weight
 lcd = lcddriver.lcd() #lcd
@@ -27,15 +15,13 @@ referenceUnit = 1
 if not EMULATE_HX711:
     import RPi.GPIO as GPIO
     from hx711 import HX711
-#else:
-#    from emulated_hx711 import HX711
+else:
+    from emulated_hx711 import HX711
 
 try:
     #Authenticate user
-    if authenticateUser():
-        print(EMULATE_HX711)
+    if RFIDread.authenticateUser():
         hx = HX711(5, 6)
-        print("here")
         hx.set_reading_format("MSB", "MSB")
 
         # HOW TO CALCULATE THE REFFERENCE UNIT
