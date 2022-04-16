@@ -37,7 +37,9 @@ try:
         hx.tare()
 
         print("Add weight now...")
+        lcd.lcd_display_string("Add weight now", 1)
         time.sleep(5)
+        lcd.lcd_clear()
 
         counter = 0
         while True:
