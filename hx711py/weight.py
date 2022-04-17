@@ -11,6 +11,7 @@ EMULATE_HX711=False #weight
 lcd = lcddriver.lcd() #lcd
 
 referenceUnit = 1
+pointScale = 0.02 #100 points = 5000g = 5kg
 
 if not EMULATE_HX711:
     import RPi.GPIO as GPIO
@@ -21,6 +22,9 @@ else:
 try:
     #Authenticate user
     if RFIDread.authenticateUser():
+        print("Setting up the scale...")
+        lcd.lcd_display_string("Setting up scale", 1)
+        
         hx = HX711(5, 6)
         hx.set_reading_format("MSB", "MSB")
 
@@ -35,7 +39,8 @@ try:
         hx.reset()
 
         hx.tare()
-
+        
+        lcd.lcd_clear()
         print("Add weight now...")
         lcd.lcd_display_string("Add weight now", 1)
         time.sleep(5)
@@ -49,6 +54,15 @@ try:
                 print("The weight is: ", val)
                 lcd.lcd_display_string("The weight is: ", 1)
                 lcd.lcd_display_string(str(val)+" grams", 2)
+                
+                time.sleep(3)
+                
+                lcd.lcd_clear()
+                points = round(val*pointScale)
+                print("You win:", points, "points")
+                lcd.lcd_display_string("You win: ", 1)
+                lcd.lcd_display_string(str(points)+" points", 2)
+                
                 time.sleep(5)
                 break
                 
@@ -69,6 +83,9 @@ except KeyboardInterrupt:
 except Exception as e:
     print("Error:", str(e), "Closing program...")
 finally:
+    lcd.lcd_clear()
+    lcd.lcd_display_string("Thank you!", 1)
+    time.sleep(3)
     lcd.lcd_clear()
     GPIO.cleanup()
     print("Thank you!")
