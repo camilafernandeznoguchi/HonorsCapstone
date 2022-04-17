@@ -21,7 +21,7 @@ else:
 
 try:
     #Authenticate user
-    if RFIDread.authenticateUser():
+    if RFIDread.authenticate():
         print("Setting up the scale...")
         lcd.lcd_display_string("Setting up scale", 1)
         
@@ -76,8 +76,13 @@ try:
             hx.power_up()
             time.sleep(3)
             lcd.lcd_clear()
+        GPIO.cleanup()
     else:
+        lcd.lcd_display_string("Unable to ", 1)
+        lcd.lcd_display_string("   authenticate", 2)
         print("Unable to authenticate user")
+        time.sleep(3)
+        
 except KeyboardInterrupt:
     print("Keyboard Interrupt. Closing program...")
 except Exception as e:
@@ -87,6 +92,5 @@ finally:
     lcd.lcd_display_string("Thank you!", 1)
     time.sleep(3)
     lcd.lcd_clear()
-    GPIO.cleanup()
     print("Thank you!")
     sys.exit()
