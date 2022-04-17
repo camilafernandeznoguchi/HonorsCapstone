@@ -6,6 +6,7 @@ sys.path.insert(0, '/home/camilaferno/Desktop/HonorsCapstone/hd44780')
 import lcddriver
 
 import RFIDread
+import writePoints
 
 EMULATE_HX711=False #weight
 lcd = lcddriver.lcd() #lcd
@@ -21,7 +22,8 @@ else:
 
 try:
     #Authenticate user
-    if RFIDread.authenticate():
+    isAuthenticated, UID = RFIDread.authenticate()
+    if isAuthenticated:
         print("Setting up the scale...")
         lcd.lcd_display_string("Setting up scale", 1)
         
@@ -57,8 +59,12 @@ try:
                 
                 time.sleep(3)
                 
-                lcd.lcd_clear()
+                #Points
                 points = round(val*pointScale)
+                
+                writePoints.updatePoints(UID, points)
+                
+                lcd.lcd_clear()
                 print("You win:", points, "points")
                 lcd.lcd_display_string("You win: ", 1)
                 lcd.lcd_display_string(str(points)+" points", 2)

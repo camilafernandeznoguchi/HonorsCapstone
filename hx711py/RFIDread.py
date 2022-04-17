@@ -20,7 +20,7 @@ def read():
     
     id, text = reader.read()
     
-    return id
+    return str(id)
 
 def authenticate():
     authenticated = False
@@ -31,8 +31,8 @@ def authenticate():
 
         query = ("SELECT * FROM user WHERE UID = %s")
         
-        UID = (str(read()),) #FORMAT AS TUPLE
-        cursor.execute(query, UID)
+        UID = read()
+        cursor.execute(query, (UID,))#FORMAT AS TUPLE
         
         user = cursor.fetchone()
         if user != None:
@@ -55,6 +55,4 @@ def authenticate():
         cnx.close()
         GPIO.cleanup()
     
-    return authenticated
-
-#print(authenticate())
+    return authenticated, UID
